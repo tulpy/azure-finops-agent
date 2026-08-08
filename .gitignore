@@ -109,3 +109,5 @@ docs/local/
 # Playwright browser profile (local testing)
 .pw-profile/
 upload-social-preview.mjs
+
+.old

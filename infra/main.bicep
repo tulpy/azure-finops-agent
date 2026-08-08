@@ -73,7 +73,7 @@ param location string
   'westus3'
 ])
 @description('Azure region for the Azure OpenAI account. Restricted to regions where gpt-5.6-sol Global Standard (version 2026-07-09) is available — verified against the Foundry model region-availability matrix. May differ from `location`. Default: swedencentral.')
-param aoaiLocation string = 'swedencentral'
+param aoaiLocation string = 'australiaeast'
 
 @allowed(['B1', 'B2', 'B3', 'S1', 'S2', 'S3', 'P0V3', 'P1V3', 'P2V3', 'P3V3'])
 @description('App Service Plan SKU. B1 (~$13/mo) is the recommended evaluation default; P0V3 matches production.')
