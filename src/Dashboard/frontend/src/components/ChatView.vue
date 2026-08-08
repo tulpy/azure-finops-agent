@@ -7342,7 +7342,7 @@ async function send() {
   align-items: center;
   justify-content: space-between;
   height: 40px;
-  background: linear-gradient(90deg, #005a9e 0%, #0078d4 55%, #0098e0 100%);
+  background: linear-gradient(90deg, #8e1168 0%, #d21989 55%, #e640a8 100%);
   color: #fff;
   padding: 0 12px;
   flex-shrink: 0;
