@@ -14,6 +14,11 @@ export default defineConfig({
     outDir: "../wwwroot",
     emptyOutDir: true,
     rollupOptions: {
+      onwarn(warning, warn) {
+        // applicationinsights-web uses /*#__PURE__*/ inside parens, which Rolldown flags as invalid
+        if (warning.code === "INVALID_ANNOTATION" && warning.id?.includes("@microsoft/applicationinsights")) return;
+        warn(warning);
+      },
       output: {
         manualChunks: (id) => {
           if (id.includes("echarts") || id.includes("zrender")) return "echarts";

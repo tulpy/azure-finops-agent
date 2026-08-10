@@ -1,0 +1,6 @@
+## Insight FinOps Agent
+deploy_FinopsAgent:
+  templateFile: ./src/orchestration/platform/platform.bicep
+  templateParameterFile: ./src/configuration/platform/platform-tenant.bicepparam
+
+

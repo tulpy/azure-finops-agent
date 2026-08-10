@@ -23,26 +23,6 @@
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <a
-          class="portal-trustline-link"
-          href="https://github.com/Azure-Samples/azure-finops-agent"
-          target="_blank"
-          rel="noopener"
-          title="View source on GitHub"
-        >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-.99-.02-1.94-3.2.69-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.66.79.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"
-            />
-          </svg>
-          <span>Open source</span>
-        </a>
       </div>
       <!-- Build/branch badge in the top-right corner. Highlights non-main
            (preview slot) deployments so it's obvious which build you're on. -->
@@ -1786,7 +1766,7 @@
         class="tools-sidebar"
         :class="{
           'tools-sidebar--open':
-            allToolCalls.length > 0 || streaming || azureConnected,
+            allToolCalls.length > 0 || streaming || azureConnected || jobs.length > 0,
         }"
       >
         <!-- ── Top half: Agent ── -->
@@ -5258,7 +5238,7 @@ function buildEChartsOption(raw) {
 
   // Official Azure brand colors for data visualization
   const colors = [
-    "#0078D4", // Azure Blue (primary)
+    "#d21989", // Azure Blue (primary)
     "#50E6FF", // Azure Cyan
     "#008575", // Azure Teal
     "#D83B01", // Azure Orange
@@ -5578,7 +5558,7 @@ function applyMapDefaults(opts) {
 // Wow comes from gradients, glow, smooth lines, hover effects and animations,
 // not from a different palette.
 const WOW_PALETTE = [
-  "#0078D4", // Azure Blue (primary)
+  "#d21989", // Azure Blue (primary)
   "#50E6FF", // Azure Cyan
   "#008575", // Azure Teal
   "#8661C5", // Azure Purple
@@ -5592,7 +5572,7 @@ const WOW_PALETTE = [
   "#002050", // Azure Navy
 ];
 const WOW_GRADIENT_STOPS = {
-  "#0078D4": ["#50A8F5", "#0078D4"],
+  "#d21989": ["#e640a8", "#d21989"],
   "#50E6FF": ["#9DF1FF", "#00B7C3"],
   "#008575": ["#26C0AD", "#008575"],
   "#8661C5": ["#B49BE0", "#8661C5"],
@@ -5924,7 +5904,7 @@ function decorateSeries(s, baseColor, idx) {
     s.emphasis = {
       itemStyle: {
         areaColor: "rgba(0,120,212,0.25)",
-        borderColor: "#0078D4",
+        borderColor: "#d21989",
         shadowBlur: 8,
         shadowColor: "rgba(0,120,212,0.4)",
       },
@@ -7311,7 +7291,7 @@ async function send() {
  * Design tokens (Fluent / Azure Portal)
  *
  * Text:       #323130 (primary), #605e5c (secondary)
- * Accent:     #0078d4 (hover: #106ebe)
+ * Accent:     #d21989 (hover: #b01278)
  * Borders:    #e1dfdd
  * Hover bg:   #f3f2f1
  * Surfaces:   #fff
@@ -7672,13 +7652,13 @@ async function send() {
   border: 1px solid transparent;
   border-radius: 6px;
   text-align: center;
-  color: #0078d4;
+  color: #d21989;
   width: calc(100% - 24px);
   font-weight: 600;
 }
 .sidebar-question--score-cta:hover {
   background: rgba(0, 120, 212, 0.06);
-  color: #005a9e;
+  color: #8e1168;
   box-shadow: 0 1px 2px rgba(0, 120, 212, 0.08);
 }
 
@@ -7889,7 +7869,7 @@ async function send() {
   box-shadow: 0 0 4px rgba(16, 124, 16, 0.4);
 }
 .sidebar-source-dot--azure {
-  background: #0078d4;
+  background: #d21989;
   box-shadow: 0 0 4px rgba(0, 120, 212, 0.4);
 }
 .sidebar-source-divider {
@@ -7982,14 +7962,14 @@ async function send() {
   color: #a19f9d;
 }
 .tenant-input:focus {
-  border-color: #0078d4;
+  border-color: #d21989;
   background: #fff;
-  box-shadow: 0 0 0 1px #0078d4;
+  box-shadow: 0 0 0 1px #d21989;
 }
 .tenant-input--highlight {
-  border-color: #0078d4;
+  border-color: #d21989;
   background: #fff;
-  box-shadow: 0 0 0 1px #0078d4;
+  box-shadow: 0 0 0 1px #d21989;
 }
 .tenant-hint {
   display: block;
@@ -8023,8 +8003,8 @@ async function send() {
   justify-content: center;
 }
 .azure-connect-btn:hover {
-  border-color: #0078d4;
-  color: #0078d4;
+  border-color: #d21989;
+  color: #d21989;
   background: #f3f2f1;
 }
 .saved-tenants {
@@ -8054,9 +8034,9 @@ async function send() {
   transition: all 0.15s;
 }
 .saved-tenant-btn:hover {
-  border-color: #0078d4;
-  color: #0078d4;
-  background: #deecf9;
+  border-color: #d21989;
+  color: #d21989;
+  background: #fce4f3;
 }
 .azure-connect-hint {
   display: block;
@@ -8107,13 +8087,13 @@ async function send() {
   align-items: center;
   gap: 5px;
   font-size: 11.5px;
-  color: #0078d4;
+  color: #d21989;
   cursor: pointer;
   user-select: none;
   padding: 2px 0;
 }
 .tenant-switch-label:hover {
-  color: #106ebe;
+  color: #b01278;
 }
 .tenant-list {
   margin-top: 4px;
@@ -8141,7 +8121,7 @@ async function send() {
   background: #edebe9;
 }
 .tenant-list-item.active {
-  background: #e6f2fb;
+  background: #fde8f4;
   cursor: default;
 }
 .tenant-list-item + .tenant-list-item {
@@ -8155,7 +8135,7 @@ async function send() {
 }
 .tenant-list-current {
   font-size: 10px;
-  color: #0078d4;
+  color: #d21989;
   font-weight: 600;
   text-transform: uppercase;
   flex-shrink: 0;
@@ -8267,7 +8247,7 @@ async function send() {
   }
   40% {
     box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.25);
-    border-color: #0078d4;
+    border-color: #d21989;
   }
   100% {
     box-shadow: 0 0 0 0 rgba(0, 120, 212, 0);
@@ -8376,8 +8356,8 @@ async function send() {
   line-height: 1.5;
 }
 .scope-badge--delegated {
-  background: #e0f2ff;
-  color: #005a9e;
+  background: #fde8f4;
+  color: #8e1168;
 }
 /* Compact summary-only delegated chip — just the icon */
 .scope-row-summary > .scope-badge--delegated {
@@ -8397,8 +8377,8 @@ async function send() {
   margin-top: 2px;
   padding: 4px 12px;
   border-radius: 4px;
-  border: 1px solid #0078d4;
-  background: #0078d4;
+  border: 1px solid #d21989;
+  background: #d21989;
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -8406,8 +8386,8 @@ async function send() {
   transition: background 0.15s;
 }
 .scope-row-connect:hover {
-  background: #106ebe;
-  border-color: #106ebe;
+  background: #b01278;
+  border-color: #b01278;
 }
 .scope-row-status {
   font-size: 11.5px;
@@ -8419,8 +8399,8 @@ async function send() {
   margin-top: 4px;
   padding: 4px 12px;
   border-radius: 4px;
-  border: 1px solid #0078d4;
-  background: #0078d4;
+  border: 1px solid #d21989;
+  background: #d21989;
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -8430,8 +8410,8 @@ async function send() {
     border-color 0.15s;
 }
 .scope-row-add:hover {
-  background: #106ebe;
-  border-color: #106ebe;
+  background: #b01278;
+  border-color: #b01278;
 }
 .addons-divider {
   height: 1px;
@@ -8627,7 +8607,7 @@ async function send() {
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 1rem;
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
   border: 0;
   border-radius: 6px;
@@ -8773,7 +8753,7 @@ async function send() {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #0078d4;
+  color: #d21989;
   background: rgba(0, 120, 212, 0.08);
   padding: 6px 14px;
   border-radius: 999px;
@@ -8783,7 +8763,7 @@ async function send() {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #0078d4;
+  background: #d21989;
   box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.18);
   animation: hero-pulse 2.4s ease-in-out infinite;
 }
@@ -8805,7 +8785,7 @@ async function send() {
   color: #111827;
 }
 .hero-title-accent {
-  background: linear-gradient(135deg, #005a9e 0%, #0078d4 50%, #0098e0 100%);
+  background: linear-gradient(135deg, #8e1168 0%, #d21989 50%, #e640a8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -8841,7 +8821,7 @@ async function send() {
   height: 32px;
   border-radius: 8px;
   background: linear-gradient(135deg, #e6f4fc 0%, #cfe9fa 100%);
-  color: #0078d4;
+  color: #d21989;
   font-weight: 800;
   font-size: 16px;
   margin-bottom: 10px;
@@ -8872,7 +8852,7 @@ async function send() {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #0078d4;
+  color: #d21989;
   margin: 0 0 0.6rem;
   text-align: center;
 }
@@ -8981,15 +8961,15 @@ async function send() {
   animation-delay: 0.7s;
 }
 .es-quick-card:hover {
-  border-color: #0078d4;
+  border-color: #d21989;
   background: #f3f2f1;
 }
 .es-quick-icon {
   width: 28px;
   height: 28px;
   border-radius: 4px;
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9016,8 +8996,8 @@ async function send() {
   color: #b4009e;
 }
 .es-quick-icon--blue {
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
 }
 .es-quick-icon--indigo {
   background: #e0e4f5;
@@ -9058,7 +9038,7 @@ async function send() {
   background: #fff;
 }
 .es-step--active {
-  border-color: #0078d4;
+  border-color: #d21989;
 }
 .es-step--done {
   border-color: #107c10;
@@ -9075,8 +9055,8 @@ async function send() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
   font-size: 13px;
   font-weight: 700;
 }
@@ -9108,8 +9088,8 @@ async function send() {
   font-weight: 600;
 }
 .es-step-state--pending {
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
 }
 .es-step-state--blocked {
   background: #f3f2f1;
@@ -9149,13 +9129,13 @@ async function send() {
   background: #484644;
 }
 .es-step-btn--azure {
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
   width: 100%;
   max-width: 360px;
 }
 .es-step-btn--azure:hover {
-  background: #106ebe;
+  background: #b01278;
 }
 
 /* ── Feature cards ── */
@@ -9176,14 +9156,14 @@ async function send() {
   transition: border-color 0.15s;
 }
 .es-feature:hover {
-  border-color: #0078d4;
+  border-color: #d21989;
 }
 .es-feature-icon {
   flex-shrink: 0;
   width: 34px;
   height: 34px;
   border-radius: 4px;
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
   display: flex;
   align-items: center;
@@ -9252,7 +9232,7 @@ async function send() {
   letter-spacing: 0.03em;
 }
 .es-compare-table th.es-compare-us {
-  color: #0078d4;
+  color: #d21989;
 }
 .es-compare-table td {
   padding: 6px 10px;
@@ -9295,8 +9275,8 @@ async function send() {
     color 0.15s;
 }
 .es-prompt:hover {
-  border-color: #0078d4;
-  color: #0078d4;
+  border-color: #d21989;
+  color: #d21989;
 }
 
 /* ── Messages ── */
@@ -9705,7 +9685,7 @@ async function send() {
   left: 0;
   top: 0;
   bottom: 0;
-  background: linear-gradient(90deg, #50a8f5, #0078d4);
+  background: linear-gradient(90deg, #e640a8, #d21989);
   border-radius: 2px;
   animation: wt-bar-grow 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -9928,7 +9908,7 @@ async function send() {
 }
 .input-action-btn:hover:not(:disabled) {
   background: #f3f2f1;
-  color: #0078d4;
+  color: #d21989;
 }
 .input-action-btn:disabled {
   opacity: 0.35;
@@ -9951,11 +9931,11 @@ async function send() {
   transition: all 0.15s;
 }
 .action-btn--active {
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
 }
 .action-btn--active:hover {
-  background: #106ebe;
+  background: #b01278;
 }
 .action-btn--disabled {
   background: #f3f2f1;
@@ -10276,7 +10256,7 @@ async function send() {
    returning user instantly sees the job is armed. Distinct from the green
    agent-pulse used while a run is actually executing. */
 .job-dot--alive {
-  background: #0078d4;
+  background: #d21989;
   animation: job-breathe 2.6s ease-in-out infinite;
 }
 @keyframes job-breathe {
@@ -10862,7 +10842,7 @@ async function send() {
 /* ── Cooling-down ghost row (ephemeral, 429/5xx) ── */
 /* Same row chrome as .st-row (size, padding, font weight 400, height);
    only the background + text colour differ so the user can spot retries.
-   Gradient mirrors the Azure top bar (#005a9e → #0078d4 → #0098e0) and
+   Gradient mirrors the Azure top bar (#8e1168 → #d21989 → #e640a8) and
    sweeps horizontally — never goes to white so dark blues stay readable. */
 .st-row--cooler {
   cursor: pointer;
@@ -10870,11 +10850,11 @@ async function send() {
   flex-wrap: wrap;
   background: linear-gradient(
     90deg,
-    #005a9e 0%,
-    #0078d4 25%,
-    #0098e0 50%,
-    #0078d4 75%,
-    #005a9e 100%
+    #8e1168 0%,
+    #d21989 25%,
+    #e640a8 50%,
+    #d21989 75%,
+    #8e1168 100%
   );
   background-size: 200% 100%;
   animation: cool-sweep 2.4s linear infinite;
@@ -11104,7 +11084,7 @@ async function send() {
 }
 .auth-spinner--azure {
   border-color: rgba(0, 120, 212, 0.2);
-  border-top-color: #0078d4;
+  border-top-color: #d21989;
 }
 @keyframes auth-spin {
   to {
@@ -11146,7 +11126,7 @@ async function send() {
   width: 40px;
   height: 40px;
   border: 3px solid rgba(0, 120, 212, 0.15);
-  border-top-color: #0078d4;
+  border-top-color: #d21989;
   border-radius: 50%;
   animation: auth-spin 0.7s linear infinite;
 }
@@ -11170,8 +11150,8 @@ async function send() {
   gap: 7px;
   padding: 7px 10px;
   border-radius: 4px;
-  border: 1px solid #0078d4;
-  color: #0078d4;
+  border: 1px solid #d21989;
+  color: #d21989;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
@@ -11197,8 +11177,8 @@ async function send() {
 }
 .new-chat-btn:hover {
   background: #f3f2f1;
-  border-color: #0078d4;
-  color: #0078d4;
+  border-color: #d21989;
+  color: #d21989;
 }
 .sidebar-user {
   display: flex;
@@ -11285,7 +11265,7 @@ async function send() {
   gap: 12px;
   padding: 12px 14px;
   border: 1px solid #e1dfdd;
-  border-left: 4px solid #0078d4;
+  border-left: 4px solid #d21989;
   border-radius: 6px;
   background: #fafafa;
   width: 100%;
@@ -11296,8 +11276,8 @@ async function send() {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11327,7 +11307,7 @@ async function send() {
   align-items: center;
   padding: 7px 16px;
   border-radius: 4px;
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
   font-size: 13px;
   font-weight: 500;
@@ -11336,7 +11316,7 @@ async function send() {
   transition: background 0.15s;
 }
 .html-deck-card-btn:hover {
-  background: #106ebe;
+  background: #b01278;
 }
 
 /* ── Script inline block ── */
@@ -11404,8 +11384,8 @@ async function send() {
     color 0.15s;
 }
 .script-copy-btn:hover {
-  background: #deecf9;
-  color: #0078d4;
+  background: #fce4f3;
+  color: #d21989;
 }
 .script-copy-btn--copied,
 .script-copy-btn--copied:hover {
@@ -11425,7 +11405,7 @@ async function send() {
   gap: 5px;
   padding: 4px 12px;
   border-radius: 4px;
-  background: #0078d4;
+  background: #d21989;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
@@ -11436,7 +11416,7 @@ async function send() {
   white-space: nowrap;
 }
 .script-download-btn:hover {
-  background: #106ebe;
+  background: #b01278;
 }
 .script-description {
   padding: 6px 12px;
@@ -11546,8 +11526,8 @@ async function send() {
   border: 1px solid #e1dfdd;
 }
 .mobile-auth-btn--azure:hover:not(:disabled) {
-  border-color: #0078d4;
-  color: #0078d4;
+  border-color: #d21989;
+  color: #d21989;
 }
 .mobile-auth-btn:disabled {
   opacity: 0.7;

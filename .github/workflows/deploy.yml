@@ -1,0 +1,152 @@
+---
+name: "Reusable Workflow: Deploy"
+
+on:
+  workflow_call:
+    inputs:
+      artifactName:
+        required: true
+        type: string
+      configKey:
+        required: true
+        type: string
+      deploymentLevel:
+        required: true
+        type: string
+      deploymentType:
+        required: true
+        type: string
+      environmentName:
+        required: true
+        type: string
+      location:
+        required: true
+        type: string
+      managementGroupId:
+        required: false
+        type: string
+      subscriptionId:
+        required: false
+        type: string
+      resourceGroupName:
+        required: false
+        type: string
+      type:
+        required: true
+        type: string
+      description:
+        required: false
+        type: string
+      actionOnUnmanageManagementgroup:
+        required: false
+        type: string
+      actionOnUnmanageResources:
+        required: false
+        type: string
+      denySettingsMode:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  deploymentJobId: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-${{ inputs.deploymentType }}
+
+jobs:
+  deploy:
+    name: ${{ inputs.deploymentType == 'create' && 'deploy' || inputs.deploymentType }}
+    environment: ${{ inputs.environmentName }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Download Artifact from Build Job
+        uses: actions/download-artifact@v6
+        with:
+          name: ${{ inputs.artifactName }}
+          path: ${{ github.workspace }}/artifact
+
+      - name: Az Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
+
+      - name: Read Variables
+        uses: pietrobolcato/action-read-yaml@1.1.0
+        id: read-yaml
+        with:
+          config: ${{ github.workspace }}/.github/variables.yml
+
+      - name: Set Variables
+        run: |
+          echo "templateFile=${{ steps.read-yaml.outputs[format('{0}.templateFile', inputs.configKey)] }}" >> $GITHUB_ENV
+          echo "templateParameterFile=${{ steps.read-yaml.outputs[format('{0}.templateParameterFile', inputs.configKey)] }}" >> $GITHUB_ENV
+
+      - name: Bicep Action - Resource Group Scope
+        if: ${{ inputs.deploymentLevel == 'resourceGroup' }}
+        uses: azure/bicep-deploy@v2
+        id: bicepRg
+        with:
+          operation: ${{ inputs.deploymentType }}
+          type: ${{ inputs.type }}
+          name: ${{ env.deploymentJobId }}
+          location: ${{ inputs.location }}
+          scope: "resourceGroup"
+          subscription-id: ${{ inputs.subscriptionId }}
+          resource-group-name: ${{ inputs.resourceGroupName }}
+          template-file: ${{ env.templateFile }}
+          parameters-file: ${{ env.templateParameterFile }}
+          what-if-exclude-change-types: ${{ inputs.deploymentType == 'whatIf' && 'noChange,ignore,unsupported' || '' }}
+          validation-level: ${{ inputs.deploymentType == 'whatIf' && 'providerNoRbac' || '' }}
+          action-on-unmanage-resourcegroups: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageManagementgroup || '' }}
+          action-on-unmanage-resources: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageResources || '' }}
+          deny-settings-mode: ${{ inputs.type == 'deploymentStacks' && inputs.denySettingsMode || '' }}
+          description: ${{ inputs.type == 'deploymentStacks' && inputs.description || '' }}
+
+      - name: Bicep Action - Subscription Scope
+        if: ${{ inputs.deploymentLevel == 'subscription' }}
+        uses: azure/bicep-deploy@v2
+        id: bicepSub
+        with:
+          operation: ${{ inputs.deploymentType }}
+          type: ${{ inputs.type }}
+          name: ${{ env.deploymentJobId }}
+          location: ${{ inputs.location }}
+          scope: "subscription"
+          subscription-id: ${{ inputs.subscriptionId }}
+          template-file: ${{ env.templateFile }}
+          parameters-file: ${{ env.templateParameterFile }}
+          what-if-exclude-change-types: ${{ inputs.deploymentType == 'whatIf' && 'noChange,ignore,unsupported' || '' }}
+          validation-level: ${{ inputs.deploymentType == 'whatIf' && 'providerNoRbac' || '' }}
+          action-on-unmanage-resourcegroups: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageManagementgroup || '' }}
+          action-on-unmanage-resources: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageResources || '' }}
+          deny-settings-mode: ${{ inputs.type == 'deploymentStacks' && inputs.denySettingsMode || '' }}
+          description: ${{ inputs.type == 'deploymentStacks' && inputs.description || '' }}
+
+      - name: Bicep Action - Management Group Scope
+        if: ${{ inputs.deploymentLevel == 'managementGroup' }}
+        uses: azure/bicep-deploy@v2
+        id: bicepMg
+        with:
+          operation: ${{ inputs.deploymentType }}
+          type: ${{ inputs.type }}
+          name: ${{ env.deploymentJobId }}
+          location: ${{ inputs.location }}
+          scope: "managementGroup"
+          management-group-id: ${{ inputs.managementGroupId }}
+          template-file: ${{ env.templateFile }}
+          parameters-file: ${{ env.templateParameterFile }}
+          what-if-exclude-change-types: ${{ inputs.deploymentType == 'whatIf' && 'noChange,ignore,unsupported' || '' }}
+          validation-level: ${{ inputs.deploymentType == 'whatIf' && 'providerNoRbac' || '' }}
+          action-on-unmanage-managementgroup: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageManagementgroup || '' }}
+          action-on-unmanage-resources: ${{ inputs.type == 'deploymentStacks' && inputs.actionOnUnmanageResources || '' }}
+          deny-settings-mode: ${{ inputs.type == 'deploymentStacks' && inputs.denySettingsMode || '' }}
+          description: ${{ inputs.type == 'deploymentStacks' && inputs.description || '' }}

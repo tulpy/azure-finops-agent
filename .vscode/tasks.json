@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: build frontend",
+			"type": "shell",
+			"command": "cd src/Dashboard/frontend && npm run build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "npm: build frontend",
+			"type": "shell",
+			"command": "cd src/Dashboard/frontend && npm run build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Replace blue with fuchsia in ChatView.vue",
+			"type": "shell",
+			"command": "cd src/Dashboard/frontend/src/components && sed -i '' 's/#0078d4/#d21989/gI; s/#106ebe/#b01278/gI; s/#005a9e/#8e1168/gI; s/#0098e0/#e640a8/gI; s/#deecf9/#fce4f3/gI; s/#e0f2ff/#fde8f4/gI; s/#e6f2fb/#fde8f4/gI; s/#50a8f5/#e640a8/g' ChatView.vue",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "npm: build frontend",
+			"type": "shell",
+			"command": "cd src/Dashboard/frontend && npm run build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "npm: dev",
+			"type": "shell",
+			"command": "cd src/Dashboard/frontend && npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

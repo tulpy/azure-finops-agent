@@ -3,6 +3,11 @@
 
 // Public retail-pricing prompts — work without an Azure login.
 const publicPricingPrompts = [
+    {
+    label: "What is the cost of a Public IP",
+    prompt:
+      "Outline the cost of a public IP in the Australia East region.",
+  },
   {
     label: "Compare VM pricing by region",
     prompt:
