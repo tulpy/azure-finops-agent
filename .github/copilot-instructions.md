@@ -258,7 +258,7 @@ For Azure App Service: `Microsoft__ClientId`, `Microsoft__ClientSecret`, `Micros
 
 ## Running Locally
 
-> See **[README.md § Running Locally](../README.md#running-locally)** for the full, copy-pasteable setup guide — prerequisites, `dotnet user-secrets` commands for all config keys, frontend build, and run instructions.
+> See **[README.md § Running Locally](../README.md)** for the full, copy-pasteable setup guide — prerequisites, `dotnet user-secrets` commands for all config keys, frontend build, and run instructions.
 
 Local dev secrets are managed via **`dotnet user-secrets`** (not `appsettings.Local.json`). Secrets live outside the repo in your OS user profile and cannot be accidentally committed. `AzureOpenAI:Endpoint` is the only fail-fast key — the app throws on startup if it is missing.
 
