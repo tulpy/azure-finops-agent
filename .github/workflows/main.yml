@@ -13,11 +13,11 @@ permissions:
   contents: read
 
 env:
-  ACR_NAME: crfinopsagent
-  ACR_LOGIN: crfinopsagent.azurecr.io
-  IMAGE: crfinopsagent.azurecr.io/finops-agent
-  WEBAPP_NAME: finops-agent-container
-  RESOURCE_GROUP: rg-finops-agent
+  ACR_NAME: crfinopsszfunwuqa3342
+  ACR_LOGIN: crfinopsszfunwuqa3342.azurecr.io
+  IMAGE: crfinopsszfunwuqa3342.azurecr.io/finops-agent
+  WEBAPP_NAME: app-finops-szfunwuqa3342
+  RESOURCE_GROUP: rg-sbx
 
 # Cancel in-flight prod deploys when a newer commit lands.
 concurrency:
