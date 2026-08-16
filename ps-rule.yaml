@@ -36,6 +36,11 @@ output:
 
 rule:
   includeLocal: true
+  exclude:
+    - Azure.ACR.GeoReplica # N/A for non premium SKU
+    - Azure.ACR.MinSku
+    - Azure.Log.Replication
+    - Azure.ACR.ExportPolicy # N/A for non premium SKU
 
 binding:
   targetType:

@@ -24,6 +24,7 @@ module component 'br/public:avm/res/insights/component:0.8.0' = {
     name: 'appi-finops-${resourceToken}'
     workspaceResourceId: workspace.id
     // Non-required parameters
+    disableLocalAuth: true
     ingestionMode: 'LogAnalytics'
     kind: 'web'
     location: location

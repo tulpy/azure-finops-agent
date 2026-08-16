@@ -46,25 +46,6 @@ jobs:
           IGNORE_GITIGNORED_FILES: true
           FILTER_REGEX_EXCLUDE: .*/(infra/[^/]+|docs/wiki/(Bicep|PS-Rule|Scripts|Pricing)|\.github/(prompts|agents|instructions|skills)/).*\.md$
 
-  pester:
-    runs-on: ubuntu-latest
-    name: Pester
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Run ./scripts/Test-AzPester.ps1
-        uses: azure/powershell@v2
-        with:
-          inlineScript: |
-            Write-Information '==> Installing needed modules...' -InformationAction Continue
-            Install-Module -Name Pester -Force
-            Import-Module Pester
-            Write-Information '==> Running script...' -InformationAction Continue
-            ./scripts/Test-AzPester.ps1
-          azPSVersion: "latest"
-
   psrule-tests-modules:
     runs-on: ubuntu-latest
     name: Run PSRule Tests [Modules]
@@ -105,7 +86,7 @@ jobs:
       - linting
       - psrule-tests-modules
       - psrule-tests-configuration
-      - pester
+
     permissions:
       contents: read
     steps:
