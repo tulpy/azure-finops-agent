@@ -1,4 +1,5 @@
 param location string
+@secure()
 param resourceToken string
 param tags object
 
@@ -17,19 +18,19 @@ resource workspace 'Microsoft.OperationalInsights/workspaces@2025-07-01' = {
   }
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: 'appi-finops-${resourceToken}'
-  location: location
-  tags: tags
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    WorkspaceResourceId: workspace.id
-    IngestionMode: 'LogAnalytics'
-    publicNetworkAccessForIngestion: 'Enabled'
-    publicNetworkAccessForQuery: 'Enabled'
+module component 'br/public:avm/res/insights/component:0.8.0' = {
+  params: {
+    // Required parameters
+    name: 'appi-finops-${resourceToken}'
+    workspaceResourceId: workspace.id
+    // Non-required parameters
+    ingestionMode: 'LogAnalytics'
+    kind: 'web'
+    location: location
+    tags: tags
   }
 }
 
+
 output logAnalyticsWorkspaceId string = workspace.id
-output appInsightsConnectionString string = appInsights.properties.ConnectionString
+output appInsightsConnectionString string = component.outputs.connectionString

@@ -110,7 +110,7 @@ var tags = {
 }
 
 // Globally-unique short token derived from sub + env so multiple users in the
-// same subscription/region don't collide on resource names (ACR, Web App).
+// same subscription/region don't collide on resource names (ACR, Web App). 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 
 resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {

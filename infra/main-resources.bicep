@@ -3,6 +3,7 @@ targetScope = 'resourceGroup'
 
 param location string
 param aoaiLocation string
+@secure()
 param resourceToken string
 param tags object
 param appServicePlanSku string

@@ -1,4 +1,5 @@
 param location string
+@secure()
 param resourceToken string
 param tags object
 

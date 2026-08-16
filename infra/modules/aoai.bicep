@@ -3,6 +3,7 @@
 // skips creation and reads the endpoint/name from the existing account so the
 // Web App MI gets the role grant on whichever account is targeted.
 param aoaiLocation string
+@secure()
 param resourceToken string
 param tags object
 param modelName string
