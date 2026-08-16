@@ -1,6 +1,6 @@
 ## Insight FinOps Agent
 deploy_FinopsAgent:
-  templateFile: ./src/orchestration/main.bicep
-  templateParameterFile: ./src/configuration/main.bicepparam
+  templateFile: ./infra/main.bicep
+  templateParameterFile: ./infra/configuration/main.bicepparam
 
 
