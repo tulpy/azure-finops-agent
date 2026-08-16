@@ -83,12 +83,14 @@ This is the _only_ place that touches the identity file on the read path; the re
 
 1. **Migrate the in-memory user**. After the `id_token` is validated, derive `newUserId = DeriveUserId(oid)` and copy `telemetry.UserTokens`, `telemetry.UserTools`, and `telemetry.CurrentSessionId` from the random anon id to the deterministic OID-derived id. This is a no-op on subsequent logins but seamlessly converts a fresh visitor's anon session into their Entra session without losing the conversation they may have already started.
 2. **Persist the rotating refresh token + the current GraphTier**:
+
    ```csharp
    if (!string.IsNullOrEmpty(refreshToken))
        persistentIdentity.SaveIdentity(ctx, new IdentityRecord { Oid = oid, ..., RefreshToken = refreshToken, GraphTier = ctx.Session.GetString("graph_tier") });
    else
        persistentIdentity.UpdateGraphTier(oid, ctx.Session.GetString("graph_tier"));
    ```
+
    The `else` branch covers the re-consent edge case where Entra returns no fresh refresh token but the user just added a new add-on — without it, post-restart hydration would forget the new add-on consent.
 3. **Logout** clears the cookie and the on-disk file via `persistentIdentity.Clear(ctx, oid)`.
 

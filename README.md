@@ -150,7 +150,7 @@ $env:ASPNETCORE_ENVIRONMENT = "Development"
 dotnet run --project Dashboard.csproj --urls "http://localhost:5000"
 ```
 
-Open **http://localhost:5000**.
+Open **[http://localhost:5000](http://localhost:5000)**.
 
 > If `AzureOpenAI:Endpoint` is not set, the app **intentionally crashes** with an `InvalidOperationException` telling you exactly which `dotnet user-secrets set` command to run. This is the fail-fast safety net.
 
@@ -179,7 +179,7 @@ The deploy workflow (`deploy.yml`) injects secrets into App Service as applicati
 > **Convention:** App Service application settings use `__` (double underscore) to map to .NET `IConfiguration` hierarchy — `AzureOpenAI__Endpoint` maps to `AzureOpenAI:Endpoint`. Follow the same pattern for any future secrets (e.g., `Microsoft__ClientId` → `Microsoft:ClientId`).
 >
 > To add a new secret: (1) create it in the GitHub UI, (2) add `KEY="${{ secrets.SECRET_NAME }}"` to the `--settings` list in the `Configure App Service settings` step of `deploy.yml`.
-
+>
 > **Tip for local dev:** Besides `dotnet user-secrets`, you can also export `AzureOpenAI__Endpoint` as a shell environment variable (`$env:AzureOpenAI__Endpoint = "..."` in PowerShell) — environment variables are picked up by `IConfiguration` automatically and take precedence over User Secrets.
 
 ## License

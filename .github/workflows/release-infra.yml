@@ -78,7 +78,7 @@ jobs:
         uses: ./.github/actions/ps-rule
         with:
           option: "ps-rule.yaml"
-          bicepPath: "src/modules"
+          bicepPath: "infra/modules"
           path: ${{ env.PSRULE_DIRECTORY }}
 
   psrule-tests-configuration:
@@ -94,7 +94,7 @@ jobs:
         uses: ./.github/actions/ps-rule
         with:
           option: "ps-rule.yaml"
-          bicepPath: "src/configuration"
+          bicepPath: "infra/configuration"
           path: ${{ env.PSRULE_DIRECTORY }}
 
   build-infrastructure:
