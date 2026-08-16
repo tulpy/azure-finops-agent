@@ -41,6 +41,12 @@ rule:
     - Azure.ACR.MinSku
     - Azure.Log.Replication
     - Azure.ACR.ExportPolicy # N/A for non premium SKU
+    - Azure.AI.PublicAccess
+    - Azure.AI.PrivateEndpoints
+    - Azure.AppService.PlanInstanceCount
+    - Azure.AppService.AvailabilityZone
+    - Azure.AppService.MinPlan
+    - Azure.AppService.ARRAffinity
 
 binding:
   targetType:
