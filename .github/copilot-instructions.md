@@ -68,7 +68,7 @@ The agent acts as a frontend on top of Azure Cost Management, Billing, ARM REST 
 
 ## Project Structure
 
-```
+``` "
 src/Dashboard/
 ├── Program.cs              # .NET backend: auth (Microsoft Entra ID), SSE chat endpoint, models, version
 ├── Dashboard.csproj        # .NET 10 project, GitHub.Copilot.SDK + Azure.Identity + Microsoft.Extensions.AI
@@ -165,6 +165,7 @@ When creating tools for the agent:
 - **Use `string` parameters** (not `double` or typed values) — the SDK's type coercion can fail. Accept strings and let .NET interpolate them into URLs.
 - **Keep tools simple** — fetch data and return it. Add UTC timestamp context if useful. Avoid complex transformations.
 - **Example pattern** (proven working):
+
   ```csharp
   private static async Task<string> GetData(
       [Description("...")] string param1,
@@ -175,6 +176,7 @@ When creating tools for the agent:
       return $"Current UTC time: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}\n{json}";
   }
   ```
+
 - **ChartTools** (`RenderChart` / `RenderAdvancedChart`) returns a serialized JSON object with chart config — the frontend detects `tool_done` for `RenderChart` or `RenderAdvancedChart` and emits a separate `chart` SSE event. `RenderAdvancedChart` accepts raw ECharts option JSON for world maps, heatmaps, treemaps, radar, gauge, etc.
 - **FaqTools** (`PublishFAQ`) dynamically publishes useful public Q&As as SEO-indexable HTML pages at `/faq/{slug}`. Entries are stored in a JSON file on disk and auto-submitted to IndexNow for Bing indexing. The sitemap at `/sitemap.xml` is dynamically generated to include both static and community FAQ entries.
 - **HtmlPresentationTools** (`GenerateHtmlPresentation`) generates a self-contained HTML executive deck. Chart.js (CDN) for charts; keyboard nav (←/→ slides, ↑ fullscreen, ↓ exit), click zones, dot nav, progress bar, swipe. Layouts: `title`, `kpi`, `chart`, `content`, `two_column`, `maturity` (single-state or before/after), `alerts` (color-coded findings), `table` (auto-bars + status tags), `closing` (CTA). Charts: bar, horizontal_bar, line, pie, doughnut, waterfall. Returns a `__HTML_READY__:{fileId}:{fileName}:{slideCount}` marker. The SSE handler emits an `html_ready` event, and the frontend shows a compact download card. Files are served via `/api/download/html/{fileId}` (with `?inline=true` for in-browser viewing) and auto-cleaned after 30 minutes. The download endpoint requires an authenticated session and enforces per-user ownership (the generating user's id is captured from the turn's Activity Baggage and stored on the `GeneratedFiles` entry). Default deck pattern is **current-state**: title → kpi → alerts → chart → table → maturity → closing.
