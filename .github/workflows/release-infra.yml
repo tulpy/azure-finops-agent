@@ -135,7 +135,7 @@ jobs:
       configKey: deploy_FinOpsAgent
       deploymentLevel: subscription
       deploymentType: whatIf
-      environmentName: sbx
+      #environmentName: sbx
       location: ${{ vars.LOCATION }}
       subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
       type: deployment
@@ -155,7 +155,7 @@ jobs:
       configKey: deploy_FinOpsAgent
       deploymentLevel: subscription
       deploymentType: create
-      environmentName: sbx
+      #environmentName: sbx
       location: ${{ vars.LOCATION }}
       subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
       type: deployment

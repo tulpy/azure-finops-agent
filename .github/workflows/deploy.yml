@@ -16,9 +16,9 @@ on:
       deploymentType:
         required: true
         type: string
-      environmentName:
-        required: true
-        type: string
+      #environmentName:
+      #  required: true
+       # type: string
       location:
         required: true
         type: string
@@ -57,7 +57,7 @@ env:
 jobs:
   deploy:
     name: ${{ inputs.deploymentType == 'create' && 'deploy' || inputs.deploymentType }}
-    environment: ${{ inputs.environmentName }}
+    #environment: ${{ inputs.environmentName }}
     runs-on: ubuntu-latest
 
     steps:
