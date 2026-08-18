@@ -90,6 +90,29 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --generic-configurations '{"acrUseManagedIdentityCreds": true}'
 
+      # Ensure the web app's system-assigned MI has AcrPull before restart.
+      # RBAC propagation can take several minutes after Bicep assigns the role;
+      # retrying here avoids ACRTokenRetrievalFailure on fresh deployments.
+      - name: Wait for AcrPull role propagation
+        run: |
+          PRINCIPAL_ID=$(az webapp show \
+            --name ${{ env.WEBAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "identity.principalId" -o tsv)
+          ACR_ID=$(az acr show --name ${{ env.ACR_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --query "id" -o tsv)
+          for i in $(seq 1 12); do
+            ROLE=$(az role assignment list --assignee "$PRINCIPAL_ID" \
+              --scope "$ACR_ID" --query "[?roleDefinitionName=='AcrPull'].id" -o tsv)
+            if [ -n "$ROLE" ]; then
+              echo "AcrPull role confirmed after attempt $i"
+              break
+            fi
+            echo "Attempt $i: AcrPull not yet visible, waiting 30s..."
+            sleep 30
+          done
+
       # Production currently runs against :latest, so we bounce the app to
       # force the new image to be pulled. (Keeping this for prod safety;
       # the test slot doesn't need it because it pins to test-<sha>.)
