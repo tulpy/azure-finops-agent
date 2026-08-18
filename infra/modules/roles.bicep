@@ -17,28 +17,40 @@ var acrPullRoleId = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 // Cognitive Services OpenAI User — data-plane inference; matches the production finops-agent-ai grants.
 var cognitiveServicesOpenAIUserRoleId = '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
 
+@description('Azure Container Registry - existing resource.')
 resource acr 'Microsoft.ContainerRegistry/registries@2024-11-01-preview' existing = {
   name: acrName
 }
 
-resource acrPullAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  scope: acr
+@description('ACR Pull User role assignment - https://github.com/Azure/bicep-registry-modules/tree/main/avm/ptn/authorization/resource-role-assignment')
+module acrPullAssignment 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
   name: guid(acr.id, webAppPrincipalId, acrPullRoleId)
-  properties: {
+  params: {
+    // Required parameters
     principalId: webAppPrincipalId
-    principalType: 'ServicePrincipal'
+    resourceId: acr.id
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', acrPullRoleId)
+    // Non-required parameters
+    principalType: 'ServicePrincipal'
   }
 }
 
-// Cognitive Services OpenAI User role on the Foundry account — applied via a nested
-// module because the account may live in a different RG/subscription when reused.
-module aoaiRole 'roles-aoai.bicep' = {
-  name: 'aoai-role'
+@description('Azure Cognitive Services OpenAI - existing resource.')
+resource aoai 'Microsoft.CognitiveServices/accounts@2026-03-01' existing = {
+  name: aoaiName
+}
+
+@description('Cognitive Services OpenAI User role assignment - https://github.com/Azure/bicep-registry-modules/tree/main/avm/ptn/authorization/resource-role-assignment')
+module aoaiOpenAIUserAssignment 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
+  name: guid(aoai.id, webAppPrincipalId, cognitiveServicesOpenAIUserRoleId)
   scope: resourceGroup(aoaiSubscriptionId, aoaiResourceGroup)
   params: {
-    aoaiName: aoaiName
-    webAppPrincipalId: webAppPrincipalId
-    cognitiveServicesOpenAIUserRoleId: cognitiveServicesOpenAIUserRoleId
+    // Required parameters
+    principalId: webAppPrincipalId
+    resourceId: aoai.id
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', cognitiveServicesOpenAIUserRoleId)
+    // Non-required parameters
+    principalType: 'ServicePrincipal'
   }
 }
+

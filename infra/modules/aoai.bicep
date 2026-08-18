@@ -1,36 +1,25 @@
-// Azure AI Foundry (Cognitive Services, kind=AIServices) account + model deployment.
-// Conditionally created — when `existingAoaiResourceId` is provided, the module
-// skips creation and reads the endpoint/name from the existing account so the
-// Web App MI gets the role grant on whichever account is targeted.
-param aoaiLocation string
-@secure()
-param resourceToken string
-param tags object
-param modelName string
-param modelVersion string
-param deploymentName string
-param modelCapacity int
+param tags object?
 @description('Deployment service tier. "Priority" enables priority processing (faster time-to-first-token at a premium); "Default" is standard processing.')
 @allowed(['Default', 'Priority'])
 param serviceTier string = 'Priority'
 param existingAoaiResourceId string
+param cognitiveServicesConfiguration object
+param cognitiveServicesProjectConfiguration object
 
 var useExisting = !empty(existingAoaiResourceId)
-
-// Parse `/subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.CognitiveServices/accounts/{name}`
-// into segments so we can `existing` reference the account in its real RG/sub.
 var existingSegments = split(existingAoaiResourceId, '/')
 var existingSubId = useExisting ? existingSegments[2] : subscription().subscriptionId
 var existingRg = useExisting ? existingSegments[4] : resourceGroup().name
 var existingName = useExisting ? existingSegments[8] : ''
 
+@description('Resource: Cognitive Services account.')
 resource newAccount 'Microsoft.CognitiveServices/accounts@2026-03-01' = if (!useExisting) {
-  name: 'aoai-finops-${resourceToken}'
-  location: aoaiLocation
+  name: cognitiveServicesConfiguration.name
+  location: cognitiveServicesConfiguration.location
   tags: tags
-  kind: 'AIServices'
+  kind: cognitiveServicesConfiguration.kind
   sku: {
-    name: 'S0'
+    name: cognitiveServicesConfiguration.sku
   }
   identity: {
     type: 'SystemAssigned'
@@ -38,59 +27,50 @@ resource newAccount 'Microsoft.CognitiveServices/accounts@2026-03-01' = if (!use
   properties: {
     // Foundry account (enables projects/agents/evals later). Key auth OFF —
     // access is managed-identity / Entra token only (no API keys).
-    allowProjectManagement: true
-    customSubDomainName: 'aoai-finops-${resourceToken}'
-    publicNetworkAccess: 'Enabled'
-    disableLocalAuth: true
+    allowProjectManagement: cognitiveServicesConfiguration.allowProjectManagement
+    customSubDomainName: cognitiveServicesConfiguration.customSubDomainName
+    publicNetworkAccess: cognitiveServicesConfiguration.publicNetworkAccess
+    disableLocalAuth: cognitiveServicesConfiguration.disableLocalAuth
   }
 }
 
+@description('Resource: Cognitive Services Model Deployment.')
 resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2026-03-01' = if (!useExisting) {
   parent: newAccount
-  name: deploymentName
-  sku: {
-    name: 'GlobalStandard'
-    capacity: modelCapacity
-  }
+  name: cognitiveServicesConfiguration.deployments[0].name
+  sku: cognitiveServicesConfiguration.deployments[0].sku
   properties: {
-    model: {
-      format: 'OpenAI'
-      name: modelName
-      version: modelVersion
-    }
+    model: cognitiveServicesConfiguration.deployments[0].model
     // Priority processing (the Foundry portal's "Priority processing" toggle):
     // requests are served with faster time-to-first-token at a price premium.
     serviceTier: serviceTier
   }
 }
 
-// Foundry project — a workspace under the account for the AI Foundry portal
-// experience (agents, evals, playground). NOT required by the app runtime (the
-// app calls the account's /openai/v1/ endpoint + deployment directly), but
-// provisioning it completes the Foundry reference architecture and gives the
-// deployment a visible project home in ai.azure.com. Only created for a new
-// account; an existing reused account keeps its own project layout.
+@description('Resource: Cognitive Services Project.')
 resource project 'Microsoft.CognitiveServices/accounts/projects@2026-03-01' = if (!useExisting) {
   parent: newAccount
-  name: 'proj-finops-${resourceToken}'
-  location: aoaiLocation
+  name: cognitiveServicesProjectConfiguration.name
+  location: cognitiveServicesConfiguration.location
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
-    displayName: 'Azure FinOps Agent'
-    description: 'Azure FinOps Agent Foundry project'
+    displayName: cognitiveServicesProjectConfiguration.displayName
+    description: cognitiveServicesProjectConfiguration.description
   }
 }
 
+@description('Resource: Existing Cognitive Services account.')
 resource existingAccount 'Microsoft.CognitiveServices/accounts@2026-03-01' existing = if (useExisting) {
   name: existingName
   scope: resourceGroup(existingSubId, existingRg)
 }
 
+// Outputs
 output endpoint string = useExisting ? existingAccount!.properties.endpoint : newAccount!.properties.endpoint
 output accountName string = useExisting ? existingName : newAccount!.name
-output deploymentName string = deploymentName
+output deploymentName string = modelDeployment.name
 output resourceGroup string = useExisting ? existingRg : resourceGroup().name
 output subscriptionId string = useExisting ? existingSubId : subscription().subscriptionId
-output projectName string = useExisting ? '' : 'proj-finops-${resourceToken}'
+output projectName string = useExisting ? '' : cognitiveServicesProjectConfiguration.name
