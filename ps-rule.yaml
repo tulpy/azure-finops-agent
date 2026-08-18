@@ -47,6 +47,8 @@ rule:
     - Azure.AppService.AvailabilityZone
     - Azure.AppService.MinPlan
     - Azure.AppService.ARRAffinity
+    - Azure.Deployment.SecureParameter
+    - Azure.Resource.UseTags
 
 binding:
   targetType:
