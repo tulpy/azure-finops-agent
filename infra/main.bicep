@@ -132,7 +132,7 @@ module resources 'main-resources.bicep' = {
 // Surfaced to `azd env` so hooks (and the user) can consume them.
 
 output AZURE_LOCATION string = location
-output AZURE_RESOURCE_GROUP string = rg.name
+output AZURE_RESOURCE_GROUP string = rg.outputs.name
 output AZURE_TENANT_ID string = subscription().tenantId
 output AZURE_SUBSCRIPTION_ID string = subscription().subscriptionId
 
