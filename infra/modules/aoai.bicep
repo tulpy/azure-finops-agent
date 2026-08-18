@@ -31,7 +31,6 @@ resource newAccount 'Microsoft.CognitiveServices/accounts@2026-03-01' = if (!use
     customSubDomainName: cognitiveServicesConfiguration.customSubDomainName
     publicNetworkAccess: cognitiveServicesConfiguration.publicNetworkAccess
     disableLocalAuth: cognitiveServicesConfiguration.disableLocalAuth
-    restore: true
   }
 }
 
