@@ -138,6 +138,7 @@ module site 'br/public:avm/res/web/site:0.24.0' = {
       acrUseManagedIdentityCreds: true
       healthCheckPath: '/api/version'
       alwaysOn: true
+      http20Enabled: true
       ftpsState: 'Disabled'
       linuxFxVersion: 'DOCKER|${registry.outputs.loginServer}/${containerImageName}'
       minTlsVersion: '1.2'
