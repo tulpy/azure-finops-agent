@@ -81,7 +81,14 @@ jobs:
           az webapp config appsettings set \
             --name ${{ env.WEBAPP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
-            --settings AzureOpenAI__Endpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}"
+            --settings \
+              AzureOpenAI__Endpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
+              DOCKER_REGISTRY_SERVER_URL="https://${{ env.ACR_LOGIN }}"
+          # Enable managed identity for ACR pull (admin creds are disabled on this registry)
+          az webapp config set \
+            --name ${{ env.WEBAPP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --generic-configurations '{"acrUseManagedIdentityCreds": true}'
 
       # Production currently runs against :latest, so we bounce the app to
       # force the new image to be pulled. (Keeping this for prod safety;
